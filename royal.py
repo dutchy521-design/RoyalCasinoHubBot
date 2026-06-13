@@ -272,32 +272,51 @@ def callback(call):
         )
         return
 
-    if call.data == "open_deals":
+        if call.data == "open_deals":
 
         markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton("🔥 Top Deal 😉", callback_data="top_deal"))
-        markup.add(types.InlineKeyboardButton("🃏 StakeJoker(+Doppelte XP)", url="https://offers.stakejoker.com/?offer=3&uid=019e15bf-d7ff-768a-a79b-d80bd7a4c0b6"))
-        markup.add(types.InlineKeyboardButton("🎩 Mr.Punter(MEGA DEAL)", url="https://mrp.naralvin.com/?mid=371120_2143474"))
-        markup.add(types.InlineKeyboardButton("💎 SGCasino (Exklusiv)", url="https://sgc.monalvor.com/?mid=371601_2146751"))
-        markup.add(types.InlineKeyboardButton("🔷 AlfCasino (Diamond Deal)", url="https://alcw.monalvor.com/?mid=371601_2146754"))
-        markup.add(types.InlineKeyboardButton("🚀 Mirax Casino", url="https://mirax.partners/pdxnhal92"))
-        markup.add(types.InlineKeyboardButton("🎲 7bit Casino", url="https://7bit.partners/pmprj8i5n"))
-        markup.add(types.InlineKeyboardButton("🎁 Freispiele", url="https://1f0s0.fit/r/XJTWVH25"))
-        markup.add(types.InlineKeyboardButton("💰 Crypto Casino", url="https://t.me/tgcplaybot/?start=UsHEI0AGB"))
-        markup.add(types.InlineKeyboardButton("👑 Crownslots", url="https://crownslotslink.com/h70a5rwfg"))
-        markup.add(types.InlineKeyboardButton("⚡ Evospin", url="https://evospinlink.com/hgnofgc6i"))
-        markup.add(types.InlineKeyboardButton("🌀 Neospin", url="https://neospinlink.com/hxfz5pzin"))
-        markup.add(types.InlineKeyboardButton("🔫 Gunsbet", url="https://gunsbetlink.com/h2briwudx"))
-        bot.send_message(chat_id, "🎰 Wähle deinen Deal:", reply_markup=markup)
-        return
 
-    if call.data == "top_deal":
-        user = call.from_user
-        bot.send_message(
-            ADMIN_ID,
-            f"🔥 TOP DEAL ANFRAGE\n\n👤 ID: {user.id}\n🧑 @{user.username or 'unknown'}"
+        markup.add(
+            types.InlineKeyboardButton(
+                "🎰 Slotoro (VIP Deal)",
+                url="https://cutt.ly/Xt28rNff"
+            )
         )
-        bot.send_message(chat_id, "🔥 Anfrage gesendet 😉")
+
+        markup.add(
+            types.InlineKeyboardButton(
+                "👑 V.Vegas",
+                url="https://cutt.ly/ft9T7XAK"
+            )
+        )
+
+        markup.add(
+            types.InlineKeyboardButton(
+                "🔥 FieryPlay",
+                url="https://cutt.ly/5t28r4Vu"
+            )
+        )
+
+        markup.add(
+            types.InlineKeyboardButton(
+                "🎯 HitnSpin",
+                url="https://cutt.ly/kt28tumv"
+            )
+        )
+
+        markup.add(
+            types.InlineKeyboardButton(
+                "💚 Verde Casino",
+                url="https://cutt.ly/4t9T6QPu"
+            )
+        )
+
+        bot.send_message(
+            chat_id,
+            "🎰 Royal Casino Hub Deals\n\nWähle deinen Bonus:",
+            reply_markup=markup
+        )
+
         return
 
 # ---------------- SCREENSHOT ----------------
