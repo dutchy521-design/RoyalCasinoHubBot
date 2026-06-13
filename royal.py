@@ -36,18 +36,18 @@ pending_xp_requests = {}
 # ---------------- LEVEL NAMES ----------------
 def get_level_name(level):
     levels = {
-        1: "🪙 Bettler-Ritter",
-        2: "🛡️ Schank-Ritter",
-        3: "⚔️ Eisen-Ritter",
-        4: "🐎 Turnier-Ritter",
-        5: "🏰 Burg-Ritter",
-        6: "👑 Casino-Champion",
-        7: "💎 Royal High Roller",
-        8: "🔥 Shadow Knight",
-        9: "⚡ Mythic Dealer",
-        10: "🏆 Legend of the Casino"
+        1: "🎟️ Bonus Hunter",
+        2: "🎰 Slot Rookie",
+        3: "🍀 Lucky Spinner",
+        4: "💵 Bonus Collector",
+        5: "🎲 Rising Gambler",
+        6: "💎 VIP Member",
+        7: "🏆 High Roller",
+        8: "👑 Royal Elite",
+        9: "⚜️ Diamond VIP",
+        10: "🏛️ Royal Casino Legend"
     }
-    return levels.get(level, "🏆 Unsterblicher Ritter")
+    return levels.get(level, "🏛️ Royal Casino Legend")
 
 # ---------------- HELPERS ----------------
 def generate_code():
