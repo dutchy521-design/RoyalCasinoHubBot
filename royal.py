@@ -252,7 +252,7 @@ def callback(call):
         ref_link = f"https://t.me/RoyalCasinoHubBot?start={user['ref_code']}"
 
         markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton("🚀 Mini App", web_app=types.WebAppInfo("https://freispielritter.pages.dev/")))
+        markup.add(types.InlineKeyboardButton("🚀 Mini App", web_app=types.WebAppInfo("https://royalcasinohubminiapp.dutchy521.workers.dev/")))
         markup.add(types.InlineKeyboardButton("📦 Deals öffnen", callback_data="open_deals"))
 
         bot.send_message(
