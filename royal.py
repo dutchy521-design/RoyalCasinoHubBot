@@ -95,16 +95,16 @@ def add_xp(user_id, amount):
 
     if new_level > old_level:
 
-    if new_level == 10:
-        bot.send_message(
-            user_id,
-            "🏛️ Du hast das maximale Level erreicht!\n\n👑 Royal Casino Legend"
-        )
-    else:
-        bot.send_message(
-            user_id,
-            f"🎉 Level Up! Du bist jetzt Level {new_level}"
-        )
+        if new_level == 10:
+            bot.send_message(
+                user_id,
+                "🏛️ Du hast das maximale Level erreicht!\n\n👑 Royal Casino Legend"
+            )
+        else:
+            bot.send_message(
+                user_id,
+                f"🎉 Level Up! Du bist jetzt Level {new_level}"
+            )
 # ---------------- DAILY ----------------
 @bot.message_handler(commands=["daily"])
 def daily(message):
@@ -396,59 +396,6 @@ def broadcast(message):
 def run():
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
-def matchmaker_loop():
-
-    while True:
-
-        try:
-
-            queue = supabase.table("game_queue") \
-                .select("*") \
-                .eq("status", "waiting") \
-                .order("created_at") \
-                .execute()
-
-            players = queue.data or []
-
-            print("QUEUE SIZE:", len(players))
-
-            if len(players) >= 2:
-
-                p1 = players[0]
-                p2 = players[1]
-
-                match_id = str(random.randint(100000, 999999))
-
-                # MATCH ERSTELLEN
-                supabase.table("game_matches").insert({
-                    "id": match_id,
-                    "player1": p1["user_id"],
-                    "player2": p2["user_id"],
-                    "status": "active",
-                    "p1_roll": None,
-                    "p2_roll": None,
-                    "winner": None,
-                    "match_finished": False
-                }).execute()
-
-                # QUEUE UPDATEN
-                supabase.table("game_queue") \
-                    .update({"status": "matched"}) \
-                    .eq("user_id", p1["user_id"]) \
-                    .execute()
-
-                supabase.table("game_queue") \
-                    .update({"status": "matched"}) \
-                    .eq("user_id", p2["user_id"]) \
-                    .execute()
-
-                print(f"MATCH CREATED: {match_id}")
-
-        except Exception as e:
-            print("matchmaker error:", e)
-
-        time.sleep(3)
-
 if __name__ == "__main__":
     import sys
 
@@ -456,8 +403,6 @@ if __name__ == "__main__":
         sys.exit()
 
     threading.Thread(target=run).start()
-
-    threading.Thread(target=matchmaker_loop, daemon=True).start()
     
     # 🔥 EINZIGER FIX: Auto-Restart bei Crash
     while True:
