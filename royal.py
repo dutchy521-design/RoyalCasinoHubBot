@@ -271,45 +271,41 @@ def callback(call):
             reply_markup=markup
         )
         return
+    if call.data == "open_deals":
+        markup = types.InlineKeyboardMarkup()
+        markup.add(
+            types.InlineKeyboardButton(
+            "🎰 Slotoro (VIP Deal)",
+            url="https://cutt.ly/Xt28rNff"
+            )
+        )
+        markup.add(
+            types.InlineKeyboardButton(
+            "👑 V.Vegas",
+            url="https://cutt.ly/ft9T7XAK"
+            )
+        )
 
-        if call.data == "open_deals":
+        markup.add(
+            types.InlineKeyboardButton(
+            "🔥 FieryPlay",
+            url="https://cutt.ly/5t28r4Vu"
+            )
+        )
 
-           markup = types.InlineKeyboardMarkup()
+        markup.add(
+            types.InlineKeyboardButton(
+            "🎯 HitnSpin",
+            url="https://cutt.ly/kt28tumv"
+            )
+        )
 
-           markup.add(
-               types.InlineKeyboardButton(
-                   "🎰 Slotoro (VIP Deal)",
-                   url="https://cutt.ly/Xt28rNff"
-               )
-           )
-
-           markup.add(
-               types.InlineKeyboardButton(
-                   "👑 V.Vegas",
-                   url="https://cutt.ly/ft9T7XAK"
-               )
-           )
-
-           markup.add(
-               types.InlineKeyboardButton(
-                   "🔥 FieryPlay",
-                   url="https://cutt.ly/5t28r4Vu"
-               )
-           )
-
-           markup.add(
-               types.InlineKeyboardButton(
-                   "🎯 HitnSpin",
-                   url="https://cutt.ly/kt28tumv"
-               )
-           )
-
-           markup.add(
-               types.InlineKeyboardButton(
-                   "💚 Verde Casino",
-                   url="https://cutt.ly/4t9T6QPu"
-               )
-           )
+        markup.add(
+            types.InlineKeyboardButton(
+            "💚 Verde Casino",
+            url="https://cutt.ly/4t9T6QPu"
+            )
+        )
 
         bot.send_message(
             chat_id,
