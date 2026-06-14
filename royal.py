@@ -466,6 +466,31 @@ def profile_button(message):
         message.chat.id,
         text
     )
+
+@bot.message_handler(func=lambda m: m.text == "📸 Einzahlung posten")
+def deposit_button(message):
+
+    bot.send_message(
+        message.chat.id,
+        """📸 Einzahlung einreichen
+
+Sende einfach einen Screenshot deiner Einzahlung.
+
+Schreibe als Text dazu:
+
+💰 Betrag
+🎰 Casino
+
+Beispiel:
+
+30€ Slotoro
+
+oder
+
+50€ Verde Casino
+
+Ein Admin prüft deinen Screenshot anschließend und vergibt die XP. ⭐"""
+    )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
