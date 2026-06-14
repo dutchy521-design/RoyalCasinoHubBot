@@ -381,6 +381,52 @@ def xp(message):
 @bot.message_handler(func=lambda m: m.text == "📈 XP")
 def xp_button(message):
     xp(message)
+
+@bot.message_handler(func=lambda m: m.text == "🎁 Deals")
+def deals_button(message):
+
+    markup = types.InlineKeyboardMarkup()
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "🎰 Slotoro (VIP Deal)",
+            url="https://cutt.ly/Xt28rNff"
+        )
+    )
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "👑 V.Vegas",
+            url="https://cutt.ly/ft9T7XAK"
+        )
+    )
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "🔥 FieryPlay",
+            url="https://cutt.ly/5t28r4Vu"
+        )
+    )
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "🎯 HitnSpin",
+            url="https://cutt.ly/kt28tumv"
+        )
+    )
+
+    markup.add(
+        types.InlineKeyboardButton(
+            "💚 Verde Casino",
+            url="https://cutt.ly/4t9T6QPu"
+        )
+    )
+
+    bot.send_message(
+        message.chat.id,
+        "🎰 Royal Casino Hub Deals",
+        reply_markup=markup
+    )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
