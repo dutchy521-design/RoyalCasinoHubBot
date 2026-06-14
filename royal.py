@@ -438,7 +438,7 @@ def profile_button(message):
         .select("*")\
         .eq("user_id", str(message.from_user.id))\
         .execute()
-
+    deposit_count = len(notes.data) if notes.data else 0
     deposits = ""
 
     if notes.data:
@@ -452,6 +452,9 @@ def profile_button(message):
 
 ⭐ Level: {user.get('level', 1)}
 🏆 {get_level_name(user.get('level', 1))}
+
+📊 XP Gesamt: {user.get('xp', 0)}
+📸 Bestätigte Einzahlungen: {deposit_count}
 
 👥 Deine Einladungen: {user.get('invites', 0)}
 
