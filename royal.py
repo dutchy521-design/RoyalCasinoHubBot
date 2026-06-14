@@ -20,6 +20,16 @@ ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
 bot = telebot.TeleBot(TOKEN)
 
+def main_menu():
+
+    markup = types.ReplyKeyboardMarkup(
+        resize_keyboard=True
+    )
+
+    markup.row("👤 Profil", "🎁 Deals")
+    markup.row("📈 XP", "📸 Einzahlung posten")
+
+    return markup
 # ---------------- WEBHOOK FIX ----------------
 bot.remove_webhook()
 
@@ -268,7 +278,7 @@ def callback(call):
         bot.send_message(
             chat_id,
             f"✅ Freigeschaltet\n\nHier dein persönlicher Einladungslink:\n{ref_link}",
-            reply_markup=markup
+            reply_markup=main_menu()
         )
         return
     if call.data == "open_deals":
@@ -368,6 +378,9 @@ def xp(message):
         message.chat.id,
         f"⭐ XP: {user['xp']}\n🏆 Level: {user['level']}\n🎖 Rang: {get_level_name(user['level'])}"
     )
+@bot.message_handler(func=lambda m: m.text == "📈 XP")
+def xp_button(message):
+    xp(message)
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
