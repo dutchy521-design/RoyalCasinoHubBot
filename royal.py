@@ -434,7 +434,19 @@ def profile_button(message):
     user = get_user(message.from_user.id)
 
     ref_link = f"https://t.me/RoyalCasinoHubBot?start={user['ref_code']}"
+    notes = supabase.table("notes")\
+        .select("*")\
+        .eq("user_id", str(message.from_user.id))\
+        .execute()
 
+    deposits = ""
+
+    if notes.data:
+
+        deposits = "\n💰 Letzte Einzahlungen:\n\n"
+
+        for n in notes.data[-5:]:
+            deposits += f"• {n['note']}\n"
     text = f"""
 👤 {user.get('first_name') or 'Spieler'}
 
@@ -446,6 +458,8 @@ def profile_button(message):
 🔗 Dein Ref-Link:
 
 {ref_link}
+
+{deposits}
 """
 
     bot.send_message(
