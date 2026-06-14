@@ -427,6 +427,31 @@ def deals_button(message):
         "🎰 Royal Casino Hub Deals",
         reply_markup=markup
     )
+
+@bot.message_handler(func=lambda m: m.text == "👤 Profil")
+def profile_button(message):
+
+    user = get_user(message.from_user.id)
+
+    ref_link = f"https://t.me/RoyalCasinoHubBot?start={user['ref_code']}"
+
+    text = f"""
+👤 {user.get('first_name') or 'Spieler'}
+
+⭐ Level: {user.get('level', 1)}
+🏆 {get_level_name(user.get('level', 1))}
+
+👥 Deine Einladungen: {user.get('invites', 0)}
+
+🔗 Dein Ref-Link:
+
+{ref_link}
+"""
+
+    bot.send_message(
+        message.chat.id,
+        text
+    )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
