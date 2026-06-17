@@ -28,7 +28,7 @@ def main_menu():
 
     markup.row("👤 Profil", "🎁 Deals")
     markup.row("📈 XP", "📸 Einzahlung posten")
-
+    markup.row("👥 Zur Gruppe")
     return markup
 # ---------------- WEBHOOK FIX ----------------
 bot.remove_webhook()
@@ -493,6 +493,13 @@ oder
 50€ Verde Casino
 
 Ein Admin prüft deinen Screenshot anschließend und vergibt die XP. ⭐"""
+    )
+@bot.message_handler(func=lambda m: m.text == "👥 Zur Gruppe")
+def group_button(message):
+
+    bot.send_message(
+        message.chat.id,
+        "👥 Hier geht's direkt zu unserer Community:\n\nhttps://t.me/+HJ62HWyRXIRlYzgy"
     )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
