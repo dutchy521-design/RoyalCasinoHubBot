@@ -29,6 +29,9 @@ def main_menu():
     markup.row("👤 Profil", "🎁 Deals")
     markup.row("📈 XP", "📸 Einzahlung posten")
     markup.row("👥 Zur Gruppe")
+
+    markup.row("🛠️ Admin")
+
     return markup
 # ---------------- WEBHOOK FIX ----------------
 bot.remove_webhook()
@@ -500,6 +503,22 @@ def group_button(message):
     bot.send_message(
         message.chat.id,
         "👥 Hier geht's direkt zu unserer Community:\n\nhttps://t.me/+HJ62HWyRXIRlYzgy"
+    )
+
+@bot.message_handler(func=lambda m: m.text == "🛠️ Admin")
+def admin_panel(message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    bot.send_message(
+        message.chat.id,
+        """🛠️ Adminbereich
+
+👤 User suchen
+📊 Statistiken
+
+Weitere Funktionen folgen..."""
     )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
