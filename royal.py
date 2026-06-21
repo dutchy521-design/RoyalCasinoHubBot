@@ -355,12 +355,14 @@ def screenshot(message):
         types.InlineKeyboardButton("❌", callback_data=f"xp_no_{req_id}")
     )
 
-    bot.send_photo(
-        ADMIN_ID,
-        message.photo[-1].file_id,
-        caption=f"📸 Screenshot\n👤 @{username}\n🕒 {timestamp}\n\n💬 {note}",
-        reply_markup=markup
-    )
+    for admin_id in ADMIN_IDS:
+
+        bot.send_photo(
+            admin_id,
+            message.photo[-1].file_id,
+            caption=f"📸 Screenshot\n👤 @{username}\n🕒 {timestamp}\n\n💬 {note}",
+            reply_markup=markup
+        )
 
 # ---------------- NOTES ----------------
 @bot.message_handler(commands=["notes"])
