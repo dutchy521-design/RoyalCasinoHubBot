@@ -523,6 +523,7 @@ def admin_panel(message):
 
     markup.row("📊 Statistiken")
     markup.row("👤 User suchen")
+    markup.row("💰 Letzte Einzahlungen")
     markup.row("🔙 Zurück")
 
     bot.send_message(
@@ -647,6 +648,42 @@ def search_user_handler(message):
 {last_deposits}
 """
 )
+
+@bot.message_handler(func=lambda m: m.text == "💰 Letzte Einzahlungen")
+def latest_deposits(message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    notes = supabase.table("notes")\
+        .select("*")\
+        .execute()
+
+    if not notes.data:
+
+        bot.send_message(
+            message.chat.id,
+            "❌ Keine Einzahlungen gefunden."
+        )
+        return
+
+    text = "💰 Letzte Einzahlungen\n\n"
+
+    for n in notes.data[-10:]:
+
+        user_id = n.get("user_id")
+
+        user = get_user(user_id)
+
+        username = user.get("username") or "unbekannt"
+
+        text += f"👤 @{username}\n"
+        text += f"💳 {n['note']}\n\n"
+
+    bot.send_message(
+        message.chat.id,
+        text
+    )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
