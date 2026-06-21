@@ -751,7 +751,7 @@ def admin_deposit_handler(message):
         supabase.table("admin_deposits").insert({
             "username": data["username"],
             "brand": data["brand"],
-            "amount": str(data["amount"]).replace("€", "")
+            "amount": str(data["amount"]).replace("€", ""),
             "reason": data["reason"],
             "admin_name": message.from_user.first_name or "Admin"
         }).execute()
