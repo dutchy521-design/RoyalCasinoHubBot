@@ -693,7 +693,7 @@ def admin_deposit_start(message):
 
     if message.from_user.id not in ADMIN_IDS:
         return
-
+    admin_search_mode.pop(message.from_user.id, None)
     admin_deposit_mode[message.from_user.id] = {
         "step": "username"
     }
@@ -751,13 +751,13 @@ def admin_deposit_handler(message):
         supabase.table("admin_deposits").insert({
             "username": data["username"],
             "brand": data["brand"],
-            "amount": data["amount"],
+            "amount": str(data["amount"]).replace("€", "")
             "reason": data["reason"],
             "admin_name": message.from_user.first_name or "Admin"
         }).execute()
 
         admin_deposit_mode.pop(message.from_user.id, None)
-
+        admin_search_mode.pop(message.from_user.id, None)
         bot.send_message(
             message.chat.id,
             f"""✅ Admin-Einzahlung gespeichert
