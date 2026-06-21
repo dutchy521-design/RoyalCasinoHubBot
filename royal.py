@@ -612,10 +612,17 @@ def search_user_handler(message):
         .execute()
 
     deposit_count = len(notes.data) if notes.data else 0
+    last_deposits = ""
 
+    if notes.data:
+
+        last_deposits = "\n💰 Letzte Einzahlungen:\n"
+
+        for n in notes.data[-3:]:
+            last_deposits += f"\n• {n['note']}"
     bot.send_message(
-        message.chat.id,
-        f"""👤 {user.get('first_name') or 'Unbekannt'}
+    message.chat.id,
+    f"""👤 {user.get('first_name') or 'Unbekannt'}
 
 📛 Username: @{user.get('username') or '-'}
 
@@ -626,9 +633,15 @@ def search_user_handler(message):
 
 👥 Einladungen: {user.get('invites', 0)}
 
+🎭 Avatar: {user.get('avatar', '-')}
+
+🔗 Ref-Code: {user.get('ref_code', '-')}
+
 📸 Einzahlungen: {deposit_count}
+
+{last_deposits}
 """
-    )
+)
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
