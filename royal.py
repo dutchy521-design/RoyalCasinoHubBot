@@ -18,6 +18,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 TOKEN = os.getenv("TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 
+admin_search_mode = {}
 bot = telebot.TeleBot(TOKEN)
 
 def main_menu():
@@ -516,6 +517,7 @@ def admin_panel(message):
     )
 
     markup.row("📊 Statistiken")
+    markup.row("👤 User suchen")
     markup.row("🔙 Zurück")
 
     bot.send_message(
@@ -563,6 +565,68 @@ def stats_button(message):
 ⭐ XP Gesamt: {total_xp}
 
 👥 Einladungen: {total_invites}
+"""
+    )
+
+@bot.message_handler(func=lambda m: m.text == "👤 User suchen")
+def search_user_button(message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    admin_search_mode[message.from_user.id] = True
+
+    bot.send_message(
+        message.chat.id,
+        "👤 Bitte Username eingeben (ohne @)"
+    )
+
+@bot.message_handler(func=lambda m: m.from_user.id in admin_search_mode)
+def search_user_handler(message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    username = message.text.replace("@", "").strip()
+
+    res = supabase.table("users")\
+        .select("*")\
+        .eq("username", username)\
+        .execute()
+
+    admin_search_mode.pop(message.from_user.id, None)
+
+    if not res.data:
+
+        bot.send_message(
+            message.chat.id,
+            "❌ Kein Benutzer gefunden."
+        )
+        return
+
+    user = res.data[0]
+
+    notes = supabase.table("notes")\
+        .select("*")\
+        .eq("user_id", str(user["id"]))\
+        .execute()
+
+    deposit_count = len(notes.data) if notes.data else 0
+
+    bot.send_message(
+        message.chat.id,
+        f"""👤 {user.get('first_name') or 'Unbekannt'}
+
+📛 Username: @{user.get('username') or '-'}
+
+🆔 ID: {user.get('id')}
+
+⭐ XP: {user.get('xp', 0)}
+🏆 Level: {user.get('level', 1)}
+
+👥 Einladungen: {user.get('invites', 0)}
+
+📸 Einzahlungen: {deposit_count}
 """
     )
 # ---------------- BROADCAST ----------------
