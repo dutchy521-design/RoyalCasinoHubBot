@@ -24,6 +24,7 @@ ADMIN_IDS = [
 ADMIN_ID = ADMIN_IDS[0]
 
 admin_search_mode = {}
+admin_deposit_mode = {}
 bot = telebot.TeleBot(TOKEN)
 
 def main_menu():
@@ -526,8 +527,8 @@ def admin_panel(message):
     markup.row("📊 Statistiken")
     markup.row("👤 User suchen")
     markup.row("💰 Letzte Einzahlungen")
+    markup.row("🎁 Admin Einzahlung")
     markup.row("🔙 Zurück")
-
     bot.send_message(
         message.chat.id,
         "🛠️ Adminbereich",
@@ -686,6 +687,87 @@ def latest_deposits(message):
         message.chat.id,
         text
     )
+
+@bot.message_handler(func=lambda m: m.text == "🎁 Admin Einzahlung")
+def admin_deposit_start(message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    admin_deposit_mode[message.from_user.id] = {
+        "step": "username"
+    }
+
+    bot.send_message(
+        message.chat.id,
+        "👤 Username eingeben (ohne @)"
+    )
+
+@bot.message_handler(func=lambda m: m.from_user.id in admin_deposit_mode)
+def admin_deposit_handler(message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    data = admin_deposit_mode[message.from_user.id]
+
+    if data["step"] == "username":
+
+        data["username"] = message.text.replace("@", "").strip()
+        data["step"] = "brand"
+
+        bot.send_message(
+            message.chat.id,
+            "🎰 Brand eingeben"
+        )
+        return
+
+    if data["step"] == "brand":
+
+        data["brand"] = message.text.strip()
+        data["step"] = "amount"
+
+        bot.send_message(
+            message.chat.id,
+            "💰 Betrag eingeben"
+        )
+        return
+
+    if data["step"] == "amount":
+
+        data["amount"] = message.text.strip()
+        data["step"] = "reason"
+
+        bot.send_message(
+            message.chat.id,
+            "📝 Grund eingeben (Neukunde, Level-Up, Quiz usw.)"
+        )
+        return
+
+    if data["step"] == "reason":
+
+        data["reason"] = message.text.strip()
+
+        supabase.table("admin_deposits").insert({
+            "username": data["username"],
+            "brand": data["brand"],
+            "amount": data["amount"],
+            "reason": data["reason"],
+            "admin_name": message.from_user.first_name or "Admin"
+        }).execute()
+
+        admin_deposit_mode.pop(message.from_user.id, None)
+
+        bot.send_message(
+            message.chat.id,
+            f"""✅ Admin-Einzahlung gespeichert
+
+👤 {data['username']}
+🎰 {data['brand']}
+💰 {data['amount']}€
+📝 {data['reason']}
+"""
+        )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
