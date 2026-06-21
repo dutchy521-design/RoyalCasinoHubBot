@@ -619,16 +619,38 @@ def search_user_handler(message):
         .select("*")\
         .eq("user_id", str(user["id"]))\
         .execute()
+    admin_deposits = supabase.table("admin_deposits")\
+    .select("*")\
+    .eq("username", user.get("username"))\
+    .execute()
 
     deposit_count = len(notes.data) if notes.data else 0
     last_deposits = ""
-
+    admin_text = ""
+    admin_total = 0
     if notes.data:
 
         last_deposits = "\n💰 Letzte Einzahlungen:\n"
 
         for n in notes.data[-3:]:
             last_deposits += f"\n• {n['note']}"
+
+    if admin_deposits.data:
+
+        admin_text = "\n\n🎁 Admin-Einzahlungen:\n"
+
+        for d in admin_deposits.data:
+
+            amount = d.get("amount", 0) or 0
+            admin_total += float(amount)
+
+            admin_text += (
+                f"\n• {amount}€ "
+                f"{d.get('brand', '-')}"
+                f" ({d.get('reason', '-')})"
+            )
+
+        admin_text += f"\n\n💰 Gesamt erhalten: {admin_total:.0f}€"
     bot.send_message(
     message.chat.id,
     f"""👤 {user.get('first_name') or 'Unbekannt'}
@@ -649,6 +671,8 @@ def search_user_handler(message):
 📸 Einzahlungen: {deposit_count}
 
 {last_deposits}
+
+{admin_text}
 """
 )
 
