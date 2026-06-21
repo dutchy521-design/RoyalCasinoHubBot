@@ -528,6 +528,7 @@ def admin_panel(message):
     markup.row("👤 User suchen")
     markup.row("💰 Letzte Einzahlungen")
     markup.row("🎁 Admin Einzahlung")
+    markup.row("📋 Kundenübersicht")
     markup.row("🔙 Zurück")
     bot.send_message(
         message.chat.id,
@@ -792,6 +793,66 @@ def admin_deposit_handler(message):
 📝 {data['reason']}
 """
         )
+
+@bot.message_handler(func=lambda m: m.text == "📋 Kundenübersicht")
+def customer_overview(message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    users = supabase.table("users")\
+        .select("*")\
+        .execute()
+
+    if not users.data:
+
+        bot.send_message(
+            message.chat.id,
+            "❌ Keine Nutzer gefunden."
+        )
+        return
+
+    text = "📋 Royal Hub Kundenübersicht\n\n"
+
+    for user in users.data:
+
+        username = user.get("username") or "unbekannt"
+
+        notes = supabase.table("notes")\
+            .select("*")\
+            .eq("user_id", str(user["id"]))\
+            .execute()
+
+        own_deposits = len(notes.data) if notes.data else 0
+
+        admin_deposits = supabase.table("admin_deposits")\
+            .select("*")\
+            .eq("username", username)\
+            .execute()
+
+        admin_count = 0
+        admin_total = 0
+
+        if admin_deposits.data:
+
+            admin_count = len(admin_deposits.data)
+
+            for d in admin_deposits.data:
+
+                amount = d.get("amount", 0) or 0
+                admin_total += float(amount)
+
+        text += (
+            f"👤 @{username}\n"
+            f"📸 Eigene Einzahlungen: {own_deposits}\n"
+            f"🎁 Admin-Einzahlungen: {admin_count}\n"
+            f"💰 Erhalten: {admin_total:.0f}€\n\n"
+        )
+
+    bot.send_message(
+        message.chat.id,
+        text
+    )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
 def broadcast(message):
