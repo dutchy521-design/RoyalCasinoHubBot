@@ -16,7 +16,12 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # ---------------- ENV ----------------
 TOKEN = os.getenv("TOKEN")
-ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
+ADMIN_IDS = [
+    184339844,
+    8539383772,
+    8440451537
+]
+ADMIN_ID = ADMIN_IDS[0]
 
 admin_search_mode = {}
 bot = telebot.TeleBot(TOKEN)
@@ -509,7 +514,7 @@ def group_button(message):
 @bot.message_handler(func=lambda m: m.text == "🛠️ Admin")
 def admin_panel(message):
 
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id not in ADMIN_IDS:
         return
 
     markup = types.ReplyKeyboardMarkup(
@@ -537,7 +542,7 @@ def back_button(message):
 @bot.message_handler(func=lambda m: m.text == "📊 Statistiken")
 def stats_button(message):
 
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id not in ADMIN_IDS:
         return
 
     users = supabase.table("users").select("*").execute()
@@ -571,7 +576,7 @@ def stats_button(message):
 @bot.message_handler(func=lambda m: m.text == "👤 User suchen")
 def search_user_button(message):
 
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id not in ADMIN_IDS:
         return
 
     admin_search_mode[message.from_user.id] = True
@@ -584,7 +589,7 @@ def search_user_button(message):
 @bot.message_handler(func=lambda m: m.from_user.id in admin_search_mode)
 def search_user_handler(message):
 
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id not in ADMIN_IDS:
         return
 
     username = message.text.replace("@", "").strip()
