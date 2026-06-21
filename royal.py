@@ -794,7 +794,7 @@ def admin_deposit_handler(message):
 """
         )
 
-@bot.message_handler(func=lambda m: m.text == "📋 Kundenübersicht")
+@bot.message_handler(func=lambda m: m.text == "🏆 Top Kunden")
 def customer_overview(message):
 
     if message.from_user.id not in ADMIN_IDS:
@@ -803,6 +803,11 @@ def customer_overview(message):
     users = supabase.table("users")\
         .select("*")\
         .execute()
+    users.data = sorted(
+        users.data,
+        key=lambda x: x.get("xp", 0) or 0,
+        reverse=True
+    )
 
     if not users.data:
 
@@ -812,9 +817,9 @@ def customer_overview(message):
         )
         return
 
-    text = "📋 Royal Hub Kundenübersicht\n\n"
+    text = "🏆 Top Kunden\n\n"
 
-    for user in users.data:
+    for user in users.data[:20]:
 
         username = user.get("username") or "unbekannt"
 
