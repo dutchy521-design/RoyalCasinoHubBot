@@ -528,7 +528,7 @@ def admin_panel(message):
     markup.row("👤 User suchen")
     markup.row("💰 Letzte Einzahlungen")
     markup.row("🎁 Admin Einzahlung")
-    markup.row("📋 Kundenübersicht")
+    markup.row("🏆 Top Kunden")
     markup.row("🔙 Zurück")
     bot.send_message(
         message.chat.id,
