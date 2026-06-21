@@ -511,14 +511,59 @@ def admin_panel(message):
     if message.from_user.id != ADMIN_ID:
         return
 
+    markup = types.ReplyKeyboardMarkup(
+        resize_keyboard=True
+    )
+
+    markup.row("📊 Statistiken")
+    markup.row("🔙 Zurück")
+
     bot.send_message(
         message.chat.id,
-        """🛠️ Adminbereich
+        "🛠️ Adminbereich",
+        reply_markup=markup
+    )
 
-👤 User suchen
-📊 Statistiken
+@bot.message_handler(func=lambda m: m.text == "🔙 Zurück")
+def back_button(message):
 
-Weitere Funktionen folgen..."""
+    bot.send_message(
+        message.chat.id,
+        "🏠 Hauptmenü",
+        reply_markup=main_menu()
+    )
+@bot.message_handler(func=lambda m: m.text == "📊 Statistiken")
+def stats_button(message):
+
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    users = supabase.table("users").select("*").execute()
+    notes = supabase.table("notes").select("*").execute()
+
+    user_count = len(users.data) if users.data else 0
+    deposit_count = len(notes.data) if notes.data else 0
+
+    total_xp = 0
+    total_invites = 0
+
+    if users.data:
+        for user in users.data:
+            total_xp += user.get("xp", 0) or 0
+            total_invites += user.get("invites", 0) or 0
+
+    bot.send_message(
+        message.chat.id,
+        f"""📊 Royal Hub Statistik
+
+👥 User: {user_count}
+
+📸 Einzahlungen: {deposit_count}
+
+⭐ XP Gesamt: {total_xp}
+
+👥 Einladungen: {total_invites}
+"""
     )
 # ---------------- BROADCAST ----------------
 @bot.message_handler(commands=["broadcast"])
